@@ -81,31 +81,32 @@ def import_frappe():
 @app.route('/updatebook', methods=['GET','POST'])
 def updatebook():
     pk = request.form['updtxtidOLD']
-    books.update_one({"bookID":pk},{'$set':{'bookID':request.form['updtxtid'],
+    new_val = {'bookID':request.form['updtxtid'],
     'title':request.form['updtxttitle'],
     'author':request.form['updtxtauthor'],
     'isbn':request.form['updtxtisbn'],
     'publisher':request.form['updtxtpubl'],
     '  num_pages':request.form['updtxtpagenum'],
     'stock':request.form['updtxtstock']
-
-    }})
+    }
+    books.update({"bookID":pk},{'$set':new_val})
+    print(new_val)
     return redirect('/books')
      
 @app.route('/addbook', methods=['GET', 'POST'])
 def create_record():
     bk = {
-        'bookID':request.form['txtid'],
+    'bookID':request.form['txtid'],
     'title' : request.form['txttitle'],
     'authors' : request.form['txtauthor'],
     'isbn' : request.form['txtisbn'],
     'publisher' : request.form['txtpubl'],
-    'num_page' : request.form['txtpagenum'],
+    '  num_pages' : request.form['txtpagenum'],
     'stock':request.form['txtstock']}
     books.insert_one(bk)
     return redirect('/books')
  
-@app.route('/delete/<string:getid>', methods = ['POST','GET'])
+@app.route('/deletebook/<string:getid>', methods = ['POST','GET'])
 def delete_book(getid):
     book_ = books.find_one({'bookID':getid})
     if not book_:
@@ -123,13 +124,12 @@ def delete_book(getid):
 @app.route('/updatemember', methods=['POST'])
 def updatemember():
     pk = request.form['updtxtmemIDOLD']
-    books.update_one({"memID":pk},{'$set':{'memID':request.form['updtxtid'],
+    cust.find_one_and_update({"memID":pk},{'$set':{'memID':request.form['updtxtmemID'],
     'name':request.form['updtxtname'],
     'phone':request.form['updtxtphone'],
     'email':request.form['updtxtemail'],
     'fine':request.form['updtxtfine']
     }})
-    
     return redirect('/member')
      
 @app.route('/addmember', methods=['GET', 'POST'])
@@ -140,6 +140,9 @@ def create_member():
     'phone' : request.form['txtphone'],
     'email' : request.form['txtemail'],
     'fine' : 0}
+    if cust.find_one({'memID':mem['memID']}):
+        flash(f'User with same Id exists. Please use a different id!','danger')
+        return redirect(url_for('mem_page'))
     cust.insert_one(mem)
     return redirect('/member')
  
@@ -164,23 +167,27 @@ def create_trans():
     'member' : request.form['txtmember'],
     'date' : request.form['txtdate'],
     }
-    fine = cust.find_one({'name':tr['member']})['fine']+100
+    if cust.find_one({'transID':tr['transID']}):
+        flash(f'A transacion with same Id exists. Please use a different id!','danger')
+        return redirect(url_for('mem_page'))
+
+    fine = int(cust.find_one({'name':tr['member']})['fine'])+100
     if books.find_one({'title':tr['title']})['stock']<=0:
         flash(f'selected book is out of stock!','danger')
         return redirect(url_for('transaction_page'))
 
     if trans_type == 'rent':
-        if cust.find_one({'name':tr['member']})['fine']+100 >500:
+        if fine >500:
             flash(f' {tr["member"]} has reached their Rental Debt Limit!','danger')
             return redirect(url_for('transaction_page'))
         tr['feestatus'] = "Unpaid"
-        cust.update_one({'name':tr['member']},{'$set':{'fine':fine}})
+        cust.find_one_and_update({'name':tr['member']},{'$set':{'fine':fine}})
         trans.insert_one(tr)
         return redirect(url_for('transaction_page'))
     
     if trans_type == 'return':
         tr['feestatus'] = "Paid"
-        cust.update_one({'name':tr['member']},{'$set':{'fine':fine-200}})
+        cust.find_one_and_update({'name':tr['member']},{'$set':{'fine':fine-200}})
         trans.insert_one(tr)
         return redirect(url_for('transaction_page'))
 

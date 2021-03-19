@@ -38,13 +38,13 @@ $(document).on('click', '#edit_but', function() {
      $('.modal-body #updtxtpubl').val (publisher1);
 
      
-     var id1 =$(this).data('memID');
+     var id1 =$(this).data('memid');
      var name1 =$(this).data('name');
     var email1 =$(this).data('email');
     var phone1 =$(this).data('phone');
     var fine1 =$(this).data('fine');
 
-    $('.modal-body #updtxtidOLD').val(id1) ;
+    $('.modal-body #updtxtmemIDOLD').val(id1) ;
      $('.modal-body #updtxtmemID').val(id1) ;
      $('.modal-body #updtxtname').val(name1);
      $('.modal-body #updtxtphone').val(phone1);

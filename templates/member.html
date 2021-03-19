@@ -3,27 +3,30 @@
 {% block body %}
 
 <div class="container " >
-    {% with messages = get_flashed_messages(with_categories=true) %}
-      {% if messages %}
-      {% for category, message in messages %}
-      
-          <div class="row alert alert-{{ category }}" style="font-size: 25px;">
-          {{ message }}
-          </div>
-      {% endfor %}
-      {% endif %}
-      {% endwith %}
     <div class="row m-t-120  ">
-        <div class="col">
-            <a  href="{{url_for('index')}}">
-                <button type="button" class="btn btn-lg btn-outline-info">Back Home</button>
-            </a>
-        </div>
-        <div   class="m-l-150 container col">
-            <button type="button" class="m-l-20 btn btn-lg btn-outline-dark" data-toggle="modal" data-target="#memberModal">
-                Add New Member
-            </button>
-        </div>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+          {% for category, message in messages %}
+          
+              <div class="row alert alert-{{ category }}" style="font-size: 25px;">
+              {{ message }}
+              </div>
+          {% endfor %}
+          {% endif %}
+          {% endwith %}
+          <div class='row'>
+            <div class="col">
+                <a  href="{{url_for('index')}}">
+                    <button type="button" class="btn btn-lg btn-outline-info">Back Home</button>
+                </a>
+            </div>
+            <div   class=" container col" style="margin-left:35vw ;">
+                <button type="button" class="m-l-20 btn btn-lg btn-outline-dark" data-toggle="modal" data-target="#memberModal">
+                    Add New Member
+                </button>
+            </div>
+          </div>
+        
     </div>
 
     <div class="row m-t-50 m-l-10 d-block">
@@ -52,7 +55,7 @@
                                 <td   class=" col p-l-5 p-r-5">{{ mem['email'] }}</td>
                                 <td   class=" col p-l-5 p-r-5">{{ mem['fine']}}</td>
                                 <td><a id="edit_but" data-name='{{mem["name"]}}' 
-                                    data-memID="{{ mem['memID'] }}" 
+                                    data-memid="{{ mem['memID'] }}" 
                                     data-phone="{{ mem['phone'] }}" 
                                     data-fine='{{ mem["fine"] }}' 
                                     data-email='{{ mem["email"] }}' 
@@ -123,13 +126,13 @@
             </div>
             <div class="modal-body">
                 <form role="form" method="post" action="/updatemember">
-                    <div class="form-group">
+                    <div class="form-group" hidden>
                         <label class="col-form-label">Id:</label>
-                        <input required type="text" class="form-control" id="updtxtmemID" name="updtxtmemID">
+                        <input  type="text" class="form-control" id="updtxtmemIDOLD" name="updtxtmemIDOLD">
                     </div>
                     <div class="form-group">
                         <label class="col-form-label">Id:</label>
-                        <input required type="text" class="form-control" id="updtxtmemIDOLD" name="updtxtmemIDOLD">
+                        <input required type="text" class="form-control" id="updtxtmemID" name="updtxtmemID">
                     </div>
                     <div class="form-group">
                         <label class="col-form-label">Name:</label>
