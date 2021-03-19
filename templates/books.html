@@ -1,0 +1,178 @@
+{% extends "layout.html" %}
+
+{% block body %}
+
+<div class="container " >
+    <div class="row m-t-120  ">
+        <div class="col">
+            <a  href="{{url_for('index')}}">
+                <button type="button" class="btn btn-lg btn-outline-info">Back Home</button>
+            </a>
+        </div>
+        <div   class="m-l-150 container col">
+            <a  href="{{url_for('import_frappe')}}">
+                <button type="button" class="btn btn-lg btn-outline-info">Import from Frappe</button>
+            </a>
+            
+            <button  type="button" class="m-l-20 btn btn-lg btn-outline-dark" data-toggle="modal" data-target="#exampleModal">
+                Add New Book
+              </button>
+        </div>
+    </div>
+
+    <div class="row m-t-50 m-l-10 d-block">
+		<div class="panel panel-default">
+            <div class="table-responsive">
+                <table id="book_table" class="table table-bordered table-striped fs-17" >
+                    <thead>
+                        <tr>
+                            <th scope="col" class=" p-l-15 p-r-15">Title</th>
+                            <th scope="col" class=" p-l-15 p-r-15">Authors</th>
+                            <th scope="col" class=" p-l-15 p-r-15">ISBN</th>
+                            <th scope="col" class=" p-l-15 p-r-15">Publisher</th>
+                            <th scope="col" class=" p-l-15 p-r-15">Pages</th>
+                            <th scope="col" class=" p-l-15 p-r-15">Stock</th>
+                            <th scope="col" class=" p-l-35 p-r-15"></th>
+                            <th scope="col" class=" p-l-35 p-r-15"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% if mess %}
+                        {% for book in books_res %}
+                        <tr>
+                                <td class=" col p-l-5 p-r-5">{{ book['title'] }}</td>
+                                <td class=" col p-l-5 p-r-5">{{ book['authors'] }}</td>
+                                <td  class=" col p-l-5 p-r-5">{{ book['isbn'] }}</td>
+                                <td class=" col p-l-5 p-r-5">{{ book['publisher'] }}</td>
+                                <td   class=" col p-l-5 p-r-5">{{ book['  num_pages']}}</td>
+                                <td   class=" col p-l-5 p-r-5">{{ book['stock']}}</td>
+                                <td><a id="edit_but" data-id='{{book["bookID"]}}' 
+                                    data-title="{{ book['title'] }}" 
+                                    data-author='{{ book["authors"] }}' 
+                                    data-isbn='{{ book["isbn"] }}' 
+                                    data-publisher='{{ book["publisher"] }}' 
+                                    data-stock='{{ book["stock"] }}' 
+                                    data-page='{{ book["  num_pages"]}}' data-toggle="modal" data-target="#editModal">
+                                    <span  class="fa fa-sign-in"></span> Edit</a>
+                                </td>
+
+                                <td><a  href="javascript:del('{{book.bookID}}','{{book.title}}','book')" class="btn btn-primary">Delete</a></td>
+                        </tr>
+                        {% endfor %}
+                        {% endif %}
+                    </tbody>
+                </table>
+                <br><br>
+            </div>
+        </div>
+    </div>
+    
+    
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Add New Book</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form role="form" method="post" action="/addbook">
+                    <div class="form-group">
+                        <label class="col-form-label">Id:</label>
+                        <input required requiredtype="text" class="form-control" id="txtid"  name="txtid">
+                    </div>
+                    <div class="form-group">
+                        <label class="col-form-label">Title:</label>
+                        <input required required type="text" class="form-control" id="txttitle" name="txttitle">
+                    </div>
+                    <div class="form-group">
+                        <label class="col-form-label">Author:</label>
+                        <input required type="text" class="form-control" id="txtauthor" name="txtauthor">
+                    </div>
+                    <div class="form-group">
+                        <label class="col-form-label">ISBN:</label>
+                        <input required type="text" class="form-control" id="txtisbn" name="txtisbn">
+                    </div>
+                    <div class="form-group">
+                        <label class="col-form-label">Publication:</label>
+                        <input required type="text" class="form-control" id="txtpubl" name="txtpubl">
+                    </div>
+                    <div class="form-group">
+                        <label class="col-form-label">Pages:</label>
+                        <input required type="text" class="form-control" id="txtpagenum" name="txtpagenum">
+                    </div>
+                    <div class="form-group">
+                        <label class="col-form-label">Stock:</label>
+                        <input required type="text" class="form-control" id="txtstock" name="txtstock">
+                    </div>
+                    
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <input required name="cmdsubmit" class="btn btn-primary" type="submit" value="Submit" />
+                </form>
+            </div>
+        </div>
+        </div>
+    </div>
+
+
+
+    <!-- Modal -->
+    <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Edit Book</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form role="form" method="post" action="/updatebook">
+                    <div class="form-group" hidden>
+                        <label class="col-form-label">Id:</label>
+                        <input required type="text" class="form-control" id="updtxtidOLD"  name="updtxtidOLD" >
+                    </div>
+                    <div class="form-group">
+                        <label class="col-form-label">Id:</label>
+                        <input required type="text" class="form-control" id="updtxtid"  name="updtxtid">
+                    </div>
+                    <div class="form-group">
+                        <label class="col-form-label">Title:</label>
+                        <input required type="text" class="form-control" id="updtxttitle" value="" name="updtxttitle">
+                    </div>
+                    <div class="form-group">
+                        <label class="col-form-label">Author:</label>
+                        <input required type="text" class="form-control" id="updtxtauthor" name="updtxtauthor">
+                    </div>
+                    <div class="form-group">
+                        <label class="col-form-label">ISBN:</label>
+                        <input required type="text" class="form-control" id="updtxtisbn" name="updtxtisbn">
+                    </div>
+                    <div class="form-group">
+                        <label class="col-form-label">Publication:</label>
+                        <input required type="text" class="form-control" id="updtxtpubl" name="updtxtpubl">
+                    </div>
+                    <div class="form-group">
+                        <label class="col-form-label">Pages:</label>
+                        <input required type="text" class="form-control" id="updtxtpagenum" name="updtxtpagenum">
+                    </div>
+                    <div class="form-group">
+                        <label class="col-form-label">Stock:</label>
+                        <input required type="text" class="form-control" id="updtxtstock" name="updtxtstock">
+                    </div>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <input required name="cmdsubmit" class="btn btn-primary" type="submit" value="Submit" />
+                </form>
+            </div>
+        </div>
+        </div>
+    </div>
+    
+
+
+</div>
+
+{% endblock %}

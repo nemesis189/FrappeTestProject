@@ -1,0 +1,160 @@
+{% extends "layout.html" %}
+
+{% block body %}
+
+<div class="container " >
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+      {% for category, message in messages %}
+      
+          <div class="row alert alert-{{ category }}" style="font-size: 25px;">
+          {{ message }}
+          </div>
+      {% endfor %}
+      {% endif %}
+      {% endwith %}
+    <div class="row m-t-120  ">
+        <div class="col">
+            <a  href="{{url_for('index')}}">
+                <button type="button" class="btn btn-lg btn-outline-info">Back Home</button>
+            </a>
+        </div>
+        <div   class="m-l-150 container col">
+            <button type="button" class="m-l-20 btn btn-lg btn-outline-dark" data-toggle="modal" data-target="#memberModal">
+                Add New Member
+            </button>
+        </div>
+    </div>
+
+    <div class="row m-t-50 m-l-10 d-block">
+		<div class="panel panel-default">
+            <div class="table-responsive">
+
+                <table id="member_data" class="table table-bordered table-striped fs-17" >
+                    <thead>
+                        <tr>
+                            <th scope="col" class=" p-l-15 p-r-15">ID</th>
+                            <th scope="col" class=" p-l-15 p-r-15">Name</th>
+                            <th scope="col" class=" p-l-15 p-r-15">Phone</th>
+                            <th scope="col" class=" p-l-15 p-r-15">Email</th>
+                            <th scope="col" class=" p-l-15 p-r-15">Debt</th>
+                            <th scope="col" class=" p-l-35 p-r-15"></th>
+                            <th scope="col" class=" p-l-35 p-r-15"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% if mess %}
+                        {% for mem in cust_res %}
+                        <tr>
+                            <td   class=" col p-l-5 p-r-5">{{ mem['memID'] }}</td>
+                            <td   class=" col p-l-5 p-r-5">{{ mem['name'] }}</td>
+                                <td   class=" col p-l-5 p-r-5">{{ mem['phone'] }}</td>
+                                <td   class=" col p-l-5 p-r-5">{{ mem['email'] }}</td>
+                                <td   class=" col p-l-5 p-r-5">{{ mem['fine']}}</td>
+                                <td><a id="edit_but" data-name='{{mem["name"]}}' 
+                                    data-memID="{{ mem['memID'] }}" 
+                                    data-phone="{{ mem['phone'] }}" 
+                                    data-fine='{{ mem["fine"] }}' 
+                                    data-email='{{ mem["email"] }}' 
+                                     data-toggle="modal" data-target="#editModal">
+                                    <span  class="fa fa-sign-in"></span> Edit</a>
+                                </td>
+                                <td><a  href="javascript:del('{{mem.memID}}','{{mem.name}}','mem')" class="btn btn-primary">Delete</a></td>
+                        </tr>
+                        {% endfor %}
+                        {% endif %}
+                    </tbody>
+                </table>
+                <br><br>
+            </div>
+        </div>
+    </div>
+
+
+
+    <!-- Modal -->
+    <div class="modal fade" id="memberModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Add New Member</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form role="form" method="post" action="/addmember">
+                    <div class="form-group">
+                        <label class="col-form-label">ID:</label>
+                        <input required type="text" class="form-control" id="txtmemID" name="txtmemID">
+                    </div>
+                    <div class="form-group">
+                        <label class="col-form-label">Name:</label>
+                        <input required type="text" class="form-control" id="txtname" name="txtname">
+                    </div>
+                    <div class="form-group">
+                        <label class="col-form-label">Phone:</label>
+                        <input required type="text" class="form-control" id="txtphone" name="txtphone">
+                    </div>
+                    <div class="form-group">
+                        <label class="col-form-label">Email:</label>
+                        <input required type="text" class="form-control" id="txtemail" name="txtemail">
+                    </div>
+                    
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <input required name="cmdsubmit" class="btn btn-primary" type="submit" value="Submit" />
+                </form>
+            </div>
+        </div>
+        </div>
+    </div>
+    
+    
+    
+    <!-- Modal -->
+    <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Edit Member Details</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form role="form" method="post" action="/updatemember">
+                    <div class="form-group">
+                        <label class="col-form-label">Id:</label>
+                        <input required type="text" class="form-control" id="updtxtmemID" name="updtxtmemID">
+                    </div>
+                    <div class="form-group">
+                        <label class="col-form-label">Id:</label>
+                        <input required type="text" class="form-control" id="updtxtmemIDOLD" name="updtxtmemIDOLD">
+                    </div>
+                    <div class="form-group">
+                        <label class="col-form-label">Name:</label>
+                        <input required type="text" class="form-control" id="updtxtname" name="updtxtname">
+                    </div>
+                    <div class="form-group">
+                        <label class="col-form-label">Phone:</label>
+                        <input required type="text" class="form-control" id="updtxtphone" name="updtxtphone">
+                    </div>
+                    <div class="form-group">
+                        <label class="col-form-label">Email:</label>
+                        <input required type="text" class="form-control" id="updtxtemail" name="updtxtemail">
+                    </div>
+                    <div class="form-group">
+                        <label class="col-form-label">Fine:</label>
+                        <input required type="text" class="form-control" id="updtxtfine" name="updtxtfine">
+                    </div>
+                    
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <input required name="cmdsubmit" class="btn btn-primary" type="submit" value="Submit" />
+                </form>
+            </div>
+        </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

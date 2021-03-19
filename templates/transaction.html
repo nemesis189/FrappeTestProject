@@ -1,0 +1,130 @@
+{% extends "layout.html" %}
+
+{% block body %}
+
+<div class="container " >
+    <div class="row m-t-120 m-l-10 d-block">
+      {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+      {% for category, message in messages %}
+      
+          <div class="row alert alert-{{ category }}" style="font-size: 25px;">
+          {{ message }}
+          </div>
+      {% endfor %}
+      {% endif %}
+      {% endwith %}
+           <div class="row">
+
+               <div class="col">
+                 <a  href="{{url_for('index')}}">
+                     <button type="button" class="btn btn-lg btn-outline-info">Back Home</button>
+                 </a>
+             </div>
+             <div   class="m-l-150 container col">
+                 <button style="float: right;" type="button" class="m-l-20 btn btn-lg btn-outline-dark" data-toggle="modal" data-target="#exampleModal">
+                     Issue A Transaction
+                 </button>
+             </div>
+           </div>
+  </div>
+
+  <div class="row m-t-50 m-l-10  d-block"  >
+  <div class="panel panel-default">
+          <div class="table-responsive">
+              <table id="book_table" class="table table-bordered table-striped fs-17" >
+                  <thead>
+                      <tr>
+                          <th scope="col" class=" p-l-15 p-r-15">Trans_ID</th>
+                          <th scope="col" class=" p-l-15 p-r-15">Title</th>
+                          <th scope="col" class=" p-l-15 p-r-15">Member Name</th>
+                          <th scope="col" class=" p-l-15 p-r-15">Date</th>
+                          <th scope="col" class=" p-l-15 p-r-15">Status</th>
+                          <th scope="col" class=" p-l-15 p-r-15">Rent Fee Status</th>
+                      </tr>
+                  </thead>
+                  <tbody>
+                      {% if mess %}
+                      {% for trans in trans_res %}
+                      <tr>
+                              <td class=" col p-l-5 p-r-5">{{ trans['transID'] }}</td>
+                              <td class=" col p-l-5 p-r-5">{{ trans['title'] }}</td>
+                              <td  class=" col p-l-5 p-r-5">{{ trans['member'] }}</td>
+                              <td class=" col p-l-5 p-r-5">{{ trans['date'] }}</td>
+                              <td   class=" col p-l-5 p-r-5">{{ trans['rentstatus']}}</td>
+                              <td   class=" col p-l-5 p-r-5">{{ trans['feestatus']}}</td>
+                              
+
+                              <td><a  href="javascript:del('{{trans.transID}}','{{trans.title}}',trans)" class="btn btn-primary">Delete</a></td> 
+                      </tr>
+                      {% endfor %}
+                      {% endif %}
+                  </tbody>
+              </table>
+              <br><br>
+          </div>
+      </div>
+  </div>
+  
+  
+  <!-- Modal -->
+  <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+      <div class="modal-content">
+          <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Transaction Details</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">×</span>
+          </button>
+          </div>
+          <div class="modal-body">
+          <form role="form" method="post" action="/addtrans" >
+              <div class="form-group">
+                  <label class="col-form-label">Trans_Id:</label>
+                  <input type="text" class="form-control" id="txtid"  name="txtid" required>
+              </div>
+              <div class=" form-group">
+                  <label class="col-form-label">Transaction Type:</label>
+                      <label class="m-b-10 " for="typechoice1">Rent
+                        <input type="radio" id="typechoice1"
+                        name="transtype" value="rent" required>
+                    </label>
+                      <label for="typechoice2">Return
+                        <input type="radio" id="typechoice2"
+                        name="transtype" value="return" required></label>
+                </div>
+                  
+             
+                 
+              <div class="form-group">
+                  <label class="col-form-label">Title:</label>
+                  <select data-placeholder="Choose a Book..." class="chosen-select"  id="txttitle" name="txttitle" required> 
+                    {% for book in books_res%}
+                    <option data-memberid="{{book['bookID']}}" value = "{{ book['title'] }}">{{ book['title'] }}</option>
+                    {% endfor %}
+                    </select>
+              </div>
+              
+              <div class="form-group">
+                  <label class=" col-form-label">Member:</label>
+                    <select data-placeholder="Choose a Member..." class="chosen-select"  id="txtmember" name="txtmember" required>
+                        {% for mem in cust_res %}
+                        <option data-memberid="{{mem['memID']}}" value = "{{ mem['name'] }}">{{ mem['name'] }}</option>
+                        {% endfor %}
+                    </select>
+              </div>
+              <div class="form-group">
+                  <label class="col-form-label">Date:</label>
+                  <input type="date" class="form-control" id="txtdate" name="txtdate" required>
+              </div>
+              
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <input name="cmdsubmit" class="btn btn-primary" type="submit" value="Submit" />
+          </form>
+          </div>
+      </div>
+      </div>
+  </div>
+</div>
+
+{% endblock %}

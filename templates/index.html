@@ -1,0 +1,36 @@
+
+{% extends "layout.html" %}
+
+{% block body %}
+	<div class="container parent m-t-250" style="min-width:100%">
+		
+				<div id='' class="row  ">
+					<div class="col-md-4">
+						<a href="{{url_for('books_page')}}">
+							<button type="button" class="btnMenu btn-lg btn-outline-success">Books</button>
+						</a>
+					</div>
+					
+					<div class="col-md-4">
+						<a href="{{url_for('mem_page')}}">
+							<button type="button" class="btnMenu btn-lg btn-outline-danger">Members</button>
+						</a>
+					</div>
+					
+					<div class="col-md-4">
+						<a href="{{url_for('transaction_page')}}">
+							<button type="button" class="btnMenu btn-lg btn-outline-warning">Transactions</button>
+						</a>
+					</div>
+					
+
+	
+		</div>
+	</div>
+	{% endblock %}
+	
+	
+  
+
+
+
