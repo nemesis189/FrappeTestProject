@@ -9,7 +9,7 @@ For database I have used MongoDB Atlas for ease of use.
 ## The webapp will offer the following 3 basic pages:
 
 
-### 1. Books and  Members
+### 1 & 2. Books and  Members
 
 - In this page a table will display title, authors, isbn, publisher, pages and stock left of the books in the database and the member details for the member
  table stored in the databse.
