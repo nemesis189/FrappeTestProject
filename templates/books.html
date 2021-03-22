@@ -15,17 +15,17 @@
         {% endif %}
         {% endwith %}
         <div class='row'>
-            <div class="col">
+            <div class=" col but-col">
                 <a  href="{{url_for('index')}}">
-                    <button type="button" class="btn btn-lg btn-outline-info">Back Home</button>
+                    <button type="button" class="m-l-10 btn btn-lg btn-outline-info">Back Home</button>
                 </a>
             </div>
-            <div   class=" container col" style="margin-left:25vw ;">
+            <div   class=" container import-but col but-col">
                 <a  href="{{url_for('import_frappe')}}">
-                    <button type="button" class="btn btn-lg btn-outline-info">Import from Frappe</button>
+                    <button type="button" class="btn btn-lg btn-outline-danger">Import from Frappe</button>
                 </a>
             </div>
-            <div class="col">
+            <div class=" col but-col">
                 
                 <button  type="button" class="m-l-20 btn btn-lg btn-outline-dark" data-toggle="modal" data-target="#exampleModal">
                     Add New Book

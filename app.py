@@ -5,6 +5,7 @@ import numpy as np
 import math
 import requests
 import json
+import dns
 
 
 # SETTING UP MOONGO ATLAS
