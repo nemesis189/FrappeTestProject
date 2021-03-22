@@ -9,7 +9,7 @@ For database I have used MongoDB Atlas for ease of use.
 ## The webapp will offer the following 3 basic pages:
 
 
-### Books and  Members
+### 1. Books and  Members
 
 - In this page a table will display title, authors, isbn, publisher, pages and stock left of the books in the database and the member details for the member
  table stored in the databse.
@@ -18,7 +18,7 @@ For database I have used MongoDB Atlas for ease of use.
 - DataTables has been used for enhancing the functionalities of the table elements, it allows you to search the table for any keyword and will match with content of all 
 the columns.
 
-### 3) Transactions
+### 3. Transactions
 - There is an option to add transacitons which will let you choose between a return and rent option. Renting checks whether the selected use's debt(unpaid rent) is less than or 
 equal to 500 or else it will display an error message.
 - For dynamic search and selection I have used 'Chosen'. Chosen is a jQuery plugin that makes long, unwieldy select boxes much more user-friendly.
