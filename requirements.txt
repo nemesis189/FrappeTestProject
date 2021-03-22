@@ -14,3 +14,4 @@ requests == 2.25.1
 
 gunicorn
 pymongo[srv]
+dnspython
