@@ -273,7 +273,7 @@ iframe {
     font-size:10px;
   }
   [class*="import-but"] {
-    margin-left: -10px;
+    margin-left: -1.5rem;
     margin-right: -30px;
   }
   [class*="btn-lg-res"]{
@@ -289,6 +289,9 @@ iframe {
   }
   [class*="btnMenu"]{
     margin-top: 10px;
+  }
+  [class*="fs-17"]{
+    font-size: 12px;
   }
 }
 
