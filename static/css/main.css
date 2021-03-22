@@ -260,6 +260,12 @@ iframe {
   margin-left:25vw ;
 }
 
+.table-fs{
+  font-size: 17px;
+}
+.two-but{
+  margin-left:35vw;
+}
 
 /*------------------------------------------------------------------
 [ Responsive ]*/
@@ -290,8 +296,13 @@ iframe {
   [class*="btnMenu"]{
     margin-top: 10px;
   }
-  [class*="fs-17"]{
+  [class*="table-fs"]{
     font-size: 12px;
   }
+  [class*="two-but"]{
+    margin-left: 0;
+  }
+
+
 }
 
