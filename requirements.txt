@@ -11,3 +11,5 @@ pymongo == 3.11.3
 
 # E:\Frappe\app.py: 6
 requests == 2.25.1
+
+gunicorn
