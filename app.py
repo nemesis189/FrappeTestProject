@@ -86,17 +86,19 @@ def transaction_page():
 
 @app.route('/books/import_frappe', methods=['GET'])
 def import_frappe():
-        for i in range (0,11):
-            try:
-                url = f"https://frappe.io/api/method/frappe-library?page={str(i)}"
-                imp_books = requests.get(url).json()['message']
-            except:
-                continue         
-                for bk in imp_books:
-                    if not books.find_one({'bookID': bk['bookID']}):
-                        books.insert_one(bk)
-        flash(f'Data from Frappe API loaded successfully','success')
-        return redirect('/books')
+    imp_books = []
+    for i in range (0,11):
+        try:
+            url = f"https://frappe.io/api/method/frappe-library?page={str(i)}"
+            imp_books = imp_books + requests.get(url).json()['message']
+        except:
+            continue
+    
+    for bk in imp_books:
+        if not books.find_one({'bookID': bk['bookID']}):
+            books.insert_one(bk)
+    flash(f'Data from Frappe API loaded successfully','success')
+    return redirect('/books')
 
 
 @app.route('/updatebook', methods=['POST'])
