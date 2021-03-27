@@ -18,6 +18,15 @@ trans = db.transaction
 app = Flask(__name__, static_url_path='/static')
 
 
+imp_books = []
+for i in range (0,11):
+    try:
+        url = f"https://frappe.io/api/method/frappe-library?page={str(i)}"
+        imp_books = imp_books + requests.get(url).json()['message']
+    except:
+        continue
+
+
 def display_books():
     books_res =[x for x in  books.find({},{'bookID':1,'title':1, 'authors':1, 'isbn':1, 'publisher':1,'  num_pages':1,'stock':1 })]
     return render_template('books.html',books_res=books_res)
@@ -85,15 +94,7 @@ def transaction_page():
 
 
 @app.route('/books/import_frappe', methods=['GET'])
-def import_frappe():
-    imp_books = []
-    for i in range (0,11):
-        try:
-            url = f"https://frappe.io/api/method/frappe-library?page={str(i)}"
-            imp_books = imp_books + requests.get(url).json()['message']
-        except:
-            continue
-    
+def import_frappe():  
     for bk in imp_books:
         if not books.find_one({'bookID': bk['bookID']}):
             books.insert_one(bk)
