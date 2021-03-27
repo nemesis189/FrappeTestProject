@@ -8,7 +8,7 @@
       {% if messages %}
       {% for category, message in messages %}
       
-          <div class="row alert alert-{{ category }}" style="font-size: 25px;">
+          <div id="flash-mess" class="row alert alert-{{ category }}" style="font-size: 25px;">
           {{ message }}
           </div>
       {% endfor %}
@@ -44,7 +44,6 @@
                         </tr>
                   </thead>
                   <tbody>
-                      {% if mess %}
                       {% for trans in trans_res %}
                       <tr>
                               <td class=" col p-l-5 p-r-5">{{ trans['transID'] }}</td>
@@ -53,12 +52,12 @@
                               <td class=" col p-l-5 p-r-5">{{ trans['date'] }}</td>
                               <td   class=" col p-l-5 p-r-5">{{ trans['rentstatus']}}</td>
                               <td   class=" col p-l-5 p-r-5">{{ trans['feestatus']}}</td>
-                              
-
-                              <td><a  href="javascript:del('{{trans.transID}}','{{trans.title}}','trans')" class="btn btn-primary">Delete</a></td> 
+                              <td>
+                                <a id="delete_but" data-name='{{ trans["member"] }}' data-class='transaction' data-id='{{ trans["transID"] }}' 
+                                type="submit" class="btn btn-primary">Delete</a>
+                              </td>
                       </tr>
                       {% endfor %}
-                      {% endif %}
                   </tbody>
               </table>
               <br><br>

@@ -8,7 +8,7 @@
           {% if messages %}
           {% for category, message in messages %}
           
-              <div class="row alert alert-{{ category }}" style="font-size: 25px;">
+              <div id="flash-mess" class="row alert alert-{{ category }}" style="font-size: 25px;">
               {{ message }}
               </div>
           {% endfor %}
@@ -46,7 +46,6 @@
                         </tr>
                     </thead>
                     <tbody>
-                        {% if mess %}
                         {% for mem in cust_res %}
                         <tr>
                             <td   class=" col p-l-5 p-r-5">{{ mem['memID'] }}</td>
@@ -59,13 +58,15 @@
                                     data-phone="{{ mem['phone'] }}" 
                                     data-fine='{{ mem["fine"] }}' 
                                     data-email='{{ mem["email"] }}' 
-                                     data-toggle="modal" data-target="#editModal">
+                                    data-toggle="modal" data-target="#editModal">
                                     <span  class="fa fa-sign-in"></span> Edit</a>
                                 </td>
-                                <td><a  href="javascript:del('{{mem.memID}}','{{mem.name}}','mem')" class="btn btn-primary">Delete</a></td>
+                                <td>
+                                    <a id="delete_but" data-name='{{ mem["name"] }}' data-class='member' data-id='{{ mem["memID"] }}' 
+                                    type="submit" class="btn btn-primary">Delete</a>
+                                </td>
                         </tr>
                         {% endfor %}
-                        {% endif %}
                     </tbody>
                 </table>
                 <br><br>

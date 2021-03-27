@@ -3,19 +3,38 @@ $(document).ready(function () {
   
   var dataTable = $('#book_table').DataTable();
   var dataTable1 = $('#member_data').DataTable();
-  
-  });
 
 
-  $('.chosen-select').chosen({width: "95%"});
+$(document).on('click', '#delete_but', function() {
+  if (confirm("Are you sure you want to delete '" + $(this).data('name') + "'"))
+  {
+      $.ajax({
+        url: '/'+ $(this).data('class'),
+        type: 'DELETE',
+        data:{
+          'id':$(this).data('id'),
+        },
+        success:function(response) {
+          window.location.href = response.redirect
+      }
+        
+    });
+  }
+});
+});
 
-  function del(ID, title, pg){
-    if ( confirm("Are you sure you want to delete '" + title + "'")){
-      
-        window.location.href = '/delete'+pg+'/' + ID;
-    }
-}
- 
+$('.chosen-select').chosen({width: "95%"});
+
+$(document).ready(function(){
+setTimeout(function() {
+    $('#flash-mess').delay(3200).fadeOut('fast');
+}, 1000);
+});
+
+
+$(document).on('click','#import-frappe',function(){
+  $('.loader').addClass('loader-active');
+});
 
 
 $(document).on('click', '#edit_but', function() {

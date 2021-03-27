@@ -1,5 +1,4 @@
 
-
 .btnMenu{
   color: black;
   min-height: 5vh;
@@ -12,32 +11,11 @@
   transition: all .35s ease-in-out;
 }
 
-.nav-link{
-  font-size: 25px !important;
-  margin-left :-10;
-}
 
 .row-1{
   display: flex;
     flex-wrap: wrap;
 }
-
-.error {
-  margin: 0;
-  font-size: 16px;
-  line-height: 26px;
-  text-align: center;
-  color: var(--red);
-}
-
-.error--hidden {
-  display: none;
-}
-
-
-
-
-
 
 
 /*//////////////////////////////////////////////////////////////////
@@ -63,20 +41,6 @@
   src: url('../fonts/poppins/Poppins-SemiBold.ttf'); 
 }
 
-@font-face {
-  font-family: Montserrat-Bold;
-  src: url('../fonts/montserrat/Montserrat-Bold.ttf'); 
-}
-
-@font-face {
-  font-family: Montserrat-SemiBold;
-  src: url('../fonts/montserrat/Montserrat-SemiBold.ttf'); 
-}
-
-@font-face {
-  font-family: Montserrat-Regular;
-  src: url('../fonts/montserrat/Montserrat-Regular.ttf'); 
-}
 
 
 /*//////////////////////////////////////////////////////////////////
@@ -92,13 +56,12 @@ body, html {
 	height: 100%;
 	font-family: Poppins-Regular, sans-serif;
 }
-
 /*---------------------------------------------*/
 a {
 	font-family: Poppins-Regular;
 	font-size: 14px;
 	line-height: 1.7;
-	color: #279589;
+	color:white;
 	margin: 0px;
 	transition: all 0.4s;
 	-webkit-transition: all 0.4s;
@@ -106,136 +69,29 @@ a {
   -moz-transition: all 0.4s;
 }
 
+.btn-primary{
+  color:white
+}
 a:focus {
 	outline: none !important;
 }
 
 a:hover {
 	text-decoration: none;
-  color: #279589;
+  color:white;
   cursor: pointer;
 }
 
-/*---------------------------------------------*/
-h1,h2,h3,h4,h5,h6 {
-	margin: 0px;
-}
-
-p {
-	font-family: Poppins-Regular;
-	font-size: 14px;
-	line-height: 1.7;
-	/* color: #666666; */
-	margin: 0px;
-}
-
-ul, li {
-	margin: 0px;
-	list-style-type: none;
-}
-
-
-/*---------------------------------------------*/
-input {
-	outline: none;
-	border: none;
-}
-
-textarea {
-  outline: none;
-  border: none;
-}
-
-textarea:focus, input:focus {
-  border-color: transparent !important;
-}
-
-input:focus::-webkit-input-placeholder { color:transparent; }
-input:focus:-moz-placeholder { color:transparent; }
-input:focus::-moz-placeholder { color:transparent; }
-input:focus:-ms-input-placeholder { color:transparent; }
-
-textarea:focus::-webkit-input-placeholder { color:transparent; }
-textarea:focus:-moz-placeholder { color:transparent; }
-textarea:focus::-moz-placeholder { color:transparent; }
-textarea:focus:-ms-input-placeholder { color:transparent; }
-
-input::-webkit-input-placeholder { color: #999999;}
-input:-moz-placeholder { color: #999999;}
-input::-moz-placeholder { color: #999999;}
-input:-ms-input-placeholder { color: #999999;}
-
-textarea::-webkit-input-placeholder { color: #999999;}
-textarea:-moz-placeholder { color: #999999;}
-textarea::-moz-placeholder { color: #999999;}
-textarea:-ms-input-placeholder { color: #999999;}
-
-
-label {
-  display: block;
-  margin: 0;
-}
-
-/*---------------------------------------------*/
 button {
 	outline: none !important;
 	border: none;
 	background: transparent;
 }
 
-button:hover {
-	cursor: pointer;
-}
-
-iframe {
-	border: none !important;
-}
-
-/*//////////////////////////////////////////////////////////////////
-[ utility ]*/
-
-/*==================================================================
-[ Text ]*/
-.txt1 {
-  font-family: Montserrat-Regular;
-  font-size: 13px;
-  line-height: 1.4;
-  color: #555555;
-}
-
-.txt2 {
-  font-family: Montserrat-Regular;
-  font-size: 13px;
-  line-height: 1.4;
-  color: #999999;
-}
-
 .hidden {
   display: none ;
 }
 
-/*==================================================================
-[ Size ]*/
-.size1 {
-  width: 355px;
-  max-width: 100%;
-}
-
-.size2 {
-  width: calc(100% - 43px);
-}
-
-/*==================================================================
-[ Background ]*/
-.bg1 {background: #3b5998;}
-.bg2 {background: #1da1f2;}
-.bg3 {background: #cd201f;}
-
-
-
-
-/*==================================================================
-[ Form ]*/
 .d-block{
   display: block;
 }
@@ -248,7 +104,6 @@ iframe {
   margin-left: 5px;
   margin-right: 5px;
 }
-
 
 .parent{
   display: flex;
@@ -267,10 +122,22 @@ iframe {
   margin-left:35vw;
 }
 
+.loader{
+  background-image:url('/static/images/ajax-loader.gif') ; 
+  height: 0;
+  width:50%;
+  background-position:left ;
+  background-repeat: no-repeat;
+  overflow: hidden;
+  transition: all .5s ease-in-out;
+}
+.loader-active{
+  height:5vw ;
+
+}
+
 /*------------------------------------------------------------------
 [ Responsive ]*/
-
-
 
 @media (max-width: 768px) {
   [class*="but-col"] {

@@ -3,17 +3,22 @@
 {% block body %}
 
 <div class="container " >
-    <div class="row m-t-120  ">
+    <div class="parent row m-t-120  ">
         {% with messages = get_flashed_messages(with_categories=true) %}
         {% if messages %}
         {% for category, message in messages %}
         
-            <div class="row alert alert-{{ category }}" style="font-size: 25px;">
+            <div id="flash-mess" class="row alert alert-{{ category }}" style="font-size: 20px; width: 100vw;">
             {{ message }}
             </div>
         {% endfor %}
         {% endif %}
         {% endwith %}
+        <div class='row loader'>
+            <div class="col-md-3 "></div>
+            <div class="col-lg-9 p-t-25  " style="font-size: 25px;"> Please wait while data loads</div>
+            
+        </div>
         <div class='row'>
             <div class=" col but-col">
                 <a  href="{{url_for('index')}}">
@@ -21,7 +26,7 @@
                 </a>
             </div>
             <div   class=" container import-but col but-col">
-                <a  href="{{url_for('import_frappe')}}">
+                <a id='import-frappe' href="{{url_for('import_frappe')}}">
                     <button type="button" class="btn btn-lg btn-outline-danger">Import from Frappe</button>
                 </a>
             </div>
@@ -52,7 +57,6 @@
                         </tr>
                     </thead>
                     <tbody>
-                        {% if mess %}
                         {% for book in books_res %}
                         <tr>
                                 <td class=" col p-l-5 p-r-5">{{ book['title'] }}</td>
@@ -71,10 +75,13 @@
                                     <span  class="fa fa-sign-in"></span> Edit</a>
                                 </td>
 
-                                <td><a  href="javascript:del('{{book.bookID}}','{{book.title}}','book')" class="btn btn-primary">Delete</a></td>
+                                <td>
+                                    <a id="delete_but" data-name='{{ book["title"] }}' data-class='books' data-id='{{ book["bookID"] }}' 
+                                    type="submit" class="btn btn-primary">Delete</a>
+                                </td>
                         </tr>
                         {% endfor %}
-                        {% endif %}
+                        
                     </tbody>
                 </table>
                 <br><br>
