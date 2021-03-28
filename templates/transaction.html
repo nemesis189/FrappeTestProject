@@ -41,6 +41,7 @@
                           <th scope="col" class=" p-l-15 p-r-15">Status</th>
                           <th scope="col" class=" p-l-15 p-r-15">Rent Fee Status</th>
                           <th scope="col" class=" p-l-15 p-r-15"></th>
+                          <th scope="col" class=" p-l-15 p-r-15"></th>
                         </tr>
                   </thead>
                   <tbody>
@@ -52,6 +53,15 @@
                               <td class=" col p-l-5 p-r-5">{{ trans['date'] }}</td>
                               <td   class=" col p-l-5 p-r-5">{{ trans['rentstatus']}}</td>
                               <td   class=" col p-l-5 p-r-5">{{ trans['feestatus']}}</td>
+                              <td>
+                                  {% if trans.rentstatus=='rent'%}
+                                    <a id="edit_but" data-title='{{trans["title"]}}' 
+                                        data-transid="{{ trans['transID'] }}" 
+                                        data-member="{{ trans['member'] }}" 
+                                        data-toggle="modal" data-target="#exampleModal">
+                                    <span  class="fa fa-sign-in"></span> Issue Return</a>
+                                    {% endif %}
+                            </td>
                               <td>
                                 <a id="delete_but" data-name='{{ trans["member"] }}' data-class='transaction' data-id='{{ trans["transID"] }}' 
                                 type="submit" class="btn btn-primary">Delete</a>
@@ -88,42 +98,40 @@
                         <input type="radio" id="typechoice1"
                         name="transtype" value="rent" required>
                     </label>
-                      <label for="typechoice2">Return
+                    <label for="typechoice2">Return
                         <input type="radio" id="typechoice2"
-                        name="transtype" value="return" required></label>
+                        name="transtype" value="return" required>
+                    </label>
                 </div>
-                  
-             
-                 
-              <div class="form-group">
-                  <label class="col-form-label">Title:</label>
-                  <select data-placeholder="Choose a Book..." class="chosen-select"  id="txttitle" name="txttitle" required> 
-                    {% for book in books_res%}
-                    <option data-memberid="{{book['bookID']}}" value = "{{ book['title'] }}">{{ book['title'] }}</option>
-                    {% endfor %}
-                    </select>
-              </div>
-              
-              <div class="form-group">
-                  <label class=" col-form-label">Member:</label>
-                    <select data-placeholder="Choose a Member..." class="chosen-select"  id="txtmember" name="txtmember" required>
-                        {% for mem in cust_res %}
-                        <option data-memberid="{{mem['memID']}}" value = "{{ mem['name'] }}">{{ mem['name'] }}</option>
+                <div class="form-group">
+                    <label class="col-form-label">Title:</label>
+                    <select data-placeholder="Choose a Book..." class="chosen-select"  id="txttitle" name="txttitle" required> 
+                        {% for book in books_res%}
+                        <option data-memberid="{{book['bookID']}}" value = "{{ book['title'] }}">{{ book['title'] }}</option>
                         {% endfor %}
-                    </select>
-              </div>
-              <div class="form-group">
-                  <label class="col-form-label">Date:</label>
-                  <input type="date" class="form-control" id="txtdate" name="txtdate" required>
-              </div>
+                        </select>
+                </div>
+                <div class="form-group">
+                    <label class=" col-form-label">Member:</label>
+                        <select data-placeholder="Choose a Member..." class="chosen-select"  id="txtmember" name="txtmember" required>
+                            {% for mem in cust_res %}
+                            <option data-memberid="{{mem['memID']}}" value = "{{ mem['name'] }}">{{ mem['name'] }}</option>
+                            {% endfor %}
+                        </select>
+                </div>
+                <div class="form-group">
+                    <label class="col-form-label">Date:</label>
+                    <input type="date" class="form-control" id="txtdate" name="txtdate" required>
+                </div>
               
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-          <input name="cmdsubmit" class="btn btn-primary" type="submit" value="Submit" />
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <input name="cmdsubmit" class="btn btn-primary" type="submit" value="Submit" />
           </form>
           </div>
       </div>
       </div>
   </div>
+
 </div>
 
 {% endblock %}

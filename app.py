@@ -175,7 +175,7 @@ def create_trans():
         flash(f'A transaction with same Id exists. Please use a different id!','danger')
         return redirect(url_for('mem_page'))
 
-    fine = int(cust.find_one({'name':tr['member']})['fine'])+100
+    fine = int(cust.find_one( {'name': tr['member']} )['fine']) + 100
     if books.find_one({'title':tr['title']})['stock' ]<= 0:
         flash(f'selected book is out of stock!','danger')
         return redirect(url_for('transaction_page'))
