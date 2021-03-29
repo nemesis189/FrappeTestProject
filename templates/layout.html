@@ -29,14 +29,11 @@
 <body style="background-color: white;">
 	<div class="head row-1" >
 		<nav class="navbar navbar-dark navbar-expand-sm  fixed-top" style='background-color:#4946e7;height: 5rem;'>
-		  <div class="container" style="max-width:100%;">
-			 <a class="navbar-brand" href="{{ url_for('index')}}"><h2>Book Store</h2></a>
-				  <ul class="navbar-nav mr-left">
-		
-				  </ul>            
-		  </div>
+			<div class="container" style="max-width:100%;">
+			<a class="navbar-brand" href="{{ url_for('index')}}"><h2>Book Store</h2></a>
+			</div>
 		</nav>
-	  </div>
+	</div>
 
     {%block body %} {% endblock %}
 	
@@ -46,7 +43,7 @@
 
 <!--===============================================================================================-->
 	<script src="{{ url_for('static', filename='js/chosen.jquery.js') }}" type="text/javascript"></script>
-  <script src="{{ url_for('static', filename='js/prism.js') }}" type="text/javascript" charset="utf-8"></script>
+  	<script src="{{ url_for('static', filename='js/prism.js') }}" type="text/javascript" charset="utf-8"></script>
 	<!--===============================================================================================-->
 	<script src="http://vitalets.github.io/x-editable/assets/mockjax/jquery.mockjax.js"></script>
 <script src="http://vitalets.github.io/x-editable/assets/momentjs/moment.min.js"></script>
