@@ -6,7 +6,7 @@
 - Removed unused pieces of code and files
 - made use of DELETE http request for deleting function
 ![image](https://user-images.githubusercontent.com/36098155/112867446-914cd780-90d8-11eb-8198-90ac463b4dfc.png)
-![image](https://user-images.githubusercontent.com/36098155/112867625-c8bb8400-90d8-11eb-8ecb-51102ee127c4.png)
+![image](https://user-images.githubusercontent.com/36098155/112868024-3798dd00-90d9-11eb-808a-dfeb3cd66d71.png)
 ![image](https://user-images.githubusercontent.com/36098155/112867689-d8d36380-90d8-11eb-89cc-750a495b103b.png)
 
 
