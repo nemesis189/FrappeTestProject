@@ -25,18 +25,15 @@ $(document).on('click', '#delete_but', function() {
 
 $('.chosen-select').chosen({width: "95%"});
 
-
 $(document).ready(function(){
 setTimeout(function() {
     $('#flash-mess').delay(3200).fadeOut('fast');
 }, 1000);
 });
 
-
 $(document).on('click','#import-frappe',function(){
   $('.loader').addClass('loader-active');
 });
-
 
 $(document).on('click', '#edit_but', function() {
 if($(this).data('id')){

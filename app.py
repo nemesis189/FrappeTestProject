@@ -87,15 +87,20 @@ def transaction_page():
 @app.route('/books/import_frappe', methods=['GET'])
 def import_frappe():
     imp_books = []
-    for i in range (0,11):
-        try:
-            url = f"https://frappe.io/api/method/frappe-library?page={str(i)}"
-            imp_books = imp_books + requests.get(url).json()['message']
-        except:
-            continue
-    for bk in imp_books:
-        if not books.find_one({'bookID': bk['bookID']}):
-            books.insert_one(bk)
+    try:
+        for i in range (0,11):
+            try:
+                url = f"https://frappe.io/api/method/frappe-library?page={str(i)}"
+                imp_books = imp_books + requests.get(url).json()['message']
+            except:
+                continue
+        for bk in imp_books:
+            if not books.find_one({'bookID': bk['bookID']}):
+                books.insert_one(bk)
+    except:
+        flash(f'Failed to load data from API','danger')
+        return redirect('/books')
+
     flash(f'Data from Frappe API loaded successfully','success')
     return redirect('/books')
 
@@ -171,6 +176,7 @@ def create_trans():
     'member' : request.form['txtmember'],
     'date' : request.form['txtdate'],
     }
+
     if trans.find_one({'transID':tr['transID']}):
         flash(f'A transaction with same Id exists. Please use a different id!','danger')
         return redirect(url_for('mem_page'))
@@ -200,4 +206,4 @@ def create_trans():
 if __name__ == '__main__':
     app.secret_key = 'mysecret'
     app.run(debug=True)
- 
+
