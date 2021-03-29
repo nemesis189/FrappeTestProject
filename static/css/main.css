@@ -142,7 +142,7 @@ button {
 #member_report_table, #book_report_table{
   width: 200%;
   min-width: 100%;
-  max-width: 300%;
+  max-width: 150%;
 }
 
 /*------------------------------------------------------------------
