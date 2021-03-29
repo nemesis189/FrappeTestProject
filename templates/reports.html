@@ -1,0 +1,103 @@
+{% extends "layout.html" %}
+{% block body %}
+
+    <div class="container m-l-50"  >
+        <div class=" row m-t-120  ">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+            {% for category, message in messages %}
+            
+                <div id="flash-mess" class="row alert alert-{{ category }}" style="font-size: 20px; width: 100vw;">
+                {{ message }}
+                </div>
+            {% endfor %}
+            {% endif %}
+            {% endwith %}
+            
+            <div class='row'>
+                <div class=" col but-col">
+                    <a  href="{{url_for('index')}}">
+                        <button type="button" class="m-l-10 btn btn-lg btn-outline-info">Back Home</button>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <ul class="nav nav-tabs m-t-60 mb-3" id="reportTab" role="tablist">
+            <li class="nav-item" role="presentation">
+                <a class="nav-link active" id="book-tab-1" data-toggle="tab"
+                href="#book-tab" role="tab" aria-controls="book-tab" aria-selected="true">Books Report</a>
+            </li>
+            <li class="nav-item" role="presentation">
+                <a  class="nav-link"  id="member-tab-2"  data-toggle="tab"  href="#member-tab"
+                    role="tab" aria-controls="member-tab" aria-selected="false" >Members Report</a>
+            </li>
+        </ul>
+
+        <div class="row m-t-50 m-l-10 ">
+            <div class="tab-content" id="report-content">
+                <div class="tab-pane fade show active" id="book-tab" role="tabpanel" aria-labelledby="book-tab">
+                    <div class="">
+                        <h2>Most Rented Books</h2>
+                        <div class="table-responsive m-t-15">
+                            <table id="book_report_table" class="table table-bordered table-striped table-fs1" >
+                                <thead>
+                                    <tr>
+                                        <th scope="col" class=" ">Sr. No.</th>
+                                        <th scope="col" class="">Book Title</th>
+                                        <th scope="col" class="">Rent Count</th>
+                                        
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% set i = namespace(value=1) %}
+                                    {% for book in final_titles %}
+                                        <tr>
+                                            <td class=" ">{{ i.value }}</td>
+                                            <td class="">{{ book[0] }}</td>
+                                            <td class=" ">{{ book[1] }}</td>
+                                        </tr>
+                                        {% set i.value = i.value+1 %}
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                            <br><br>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tab-pane fade" id="member-tab" role="tabpanel" aria-labelledby="ex1-tab-2">
+                    <div class="">
+                        <h2>Frequent Renters</h2>
+                        <div class="table-responsive m-t-15">
+                            <table id="member_report_table" class="table table-bordered table-striped table-fs1" >
+                                <thead>
+                                    <tr>
+                                        <th scope="col" >Sr. No.</th>
+                                        <th scope="col" >Member Name</th>
+                                        <th scope="col" >Amount Spent</th>
+                                        
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% set i = namespace(value=1) %}
+                                    {% for member in final_members %}
+                                        <tr>
+                                            <td >{{ i.value }}</td>
+                                            <td >{{ member[0] }}</td>
+                                            <td >{{ member[1]*100 }}</td>
+                                            
+                                        </tr>
+                                        {% set i.value = i.value+1 %}
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                            <br><br>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>  
+
+{% endblock %}

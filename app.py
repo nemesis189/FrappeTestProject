@@ -34,7 +34,7 @@ def display_transaction():
 
 
 
-#Route for index
+##### All basic routes
 @app.route('/',methods=['GET'])
 def index():
     return render_template('index.html')
@@ -82,12 +82,28 @@ def transaction_page():
 
     if request.method =='GET':
         return display_transaction()
+        
 
+@app.route('/reports',methods=['GET'])
+def reports():
+    list_of_trans = list(trans.find({'rentstatus':'rent'}, {'_id':0,'title':1, 'member':1}))
+    titles = [ x['title'] for x in list_of_trans ]
+    members = [ x['member'] for x in list_of_trans ]
+
+    title_count = { title: titles.count(title) for title in titles }
+    member_count = { mem: members.count(mem) for mem in members }
+    final_titles = sorted(title_count.items(), key = lambda kv:(kv[1], kv[0]), reverse = True )
+    final_members = sorted(member_count.items(), key = lambda kv:(kv[1], kv[0]), reverse = True)
+
+    return render_template('reports.html',final_members=final_members,final_titles=final_titles)
+
+
+####### Routes for additional functions
 
 @app.route('/books/import_frappe', methods=['GET'])
 def import_frappe():
     imp_books = []
-    for i in range (0,11):
+    for i in range (0,6):
         try:
             url = f"https://frappe.io/api/method/frappe-library?page={str(i)}"
             imp_books = imp_books + requests.get(url).json()['message']
@@ -95,6 +111,7 @@ def import_frappe():
             continue
     for bk in imp_books:
         if not books.find_one({'bookID': bk['bookID']}):
+            bk['stock'] = 50
             books.insert_one(bk)
     flash(f'Data from Frappe API loaded successfully','success')
     return redirect('/books')
@@ -142,7 +159,7 @@ def updatemember():
     'fine':request.form['updtxtfine']
     }})
     return redirect('/member')
-     
+
 @app.route('/addmember', methods=[ 'POST'])
 def create_member():
     mem = {
@@ -176,8 +193,10 @@ def create_trans():
         flash(f'A transaction with same Id exists. Please use a different id!','danger')
         return redirect(url_for('mem_page'))
 
-    fine = int(cust.find_one( {'name': tr['member']} )['fine']) + 100
-    if books.find_one({'title':tr['title']})['stock' ]<= 0:
+    fine = int(cust.find_one( {'name': tr['member']} )['fine']) 
+    new_stock = int(books.find_one( { 'title': tr['title']} )['stock'])
+
+    if new_stock <= 0:
         flash(f'selected book is out of stock!','danger')
         return redirect(url_for('transaction_page'))
 
@@ -186,15 +205,21 @@ def create_trans():
             flash(f' {tr["member"]} has reached their Rental Debt Limit!','danger')
             return redirect(url_for('transaction_page'))
         tr['feestatus'] = "Unpaid"
-        cust.find_one_and_update( {'name': tr['member'] }, {'$set': {'fine':fine} })
+        cust.find_one_and_update( {'name': tr['member'] }, {'$set': {'fine':fine+100} })
+        books.find_one_and_update( { 'title': tr['title']}, {'$set': { 'stock': new_stock-1 }} )
         trans.insert_one(tr)
         return redirect(url_for('transaction_page'))
     
     if trans_type == 'return':
         tr['feestatus'] = "Paid"
-        cust.find_one_and_update({'name': tr['member'] }, {'$set':  {'fine':fine-200} })
+        cust.find_one_and_update({'name': tr['member'] }, {'$set':  {'fine':fine-100} })
+        books.find_one_and_update( { 'title': tr['title']}, {'$set': { 'stock': new_stock+1 }} )
         trans.insert_one(tr)
         return redirect(url_for('transaction_page'))
+
+########## Reports ###############
+
+
 
 
 

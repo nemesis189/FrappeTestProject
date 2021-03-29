@@ -42,21 +42,21 @@
 }
 
 
-
-/*//////////////////////////////////////////////////////////////////
-[ RESTYLE TAG ]*/
-
-* {
-	margin: 0px; 
-	padding: 0px; 
-	box-sizing: border-box;
-}
-
 body, html {
 	height: 100%;
 	font-family: Poppins-Regular, sans-serif;
 }
-/*---------------------------------------------*/
+
+.nav-tabs .nav-link , .nav-link a{
+  color: #495057;
+  font-size: 20px;
+  border: 3px solid transparent;
+}
+
+.nav{
+  width: 150%;
+}
+
 a {
 	font-family: Poppins-Regular;
 	font-size: 14px;
@@ -105,7 +105,7 @@ button {
   margin-right: 5px;
 }
 
-.parent{
+.parent, .parent-1{
   display: flex;
   align-items: center;
   justify-content: center;
@@ -117,6 +117,9 @@ button {
 
 .table-fs{
   font-size: 17px;
+}
+.table-fs1{
+  font-size: 19px;
 }
 .two-but{
   margin-left:35vw;
@@ -134,6 +137,12 @@ button {
 .loader-active{
   height:5vw ;
 
+}
+
+#member_report_table, #book_report_table{
+  width: 200%;
+  min-width: 100%;
+  max-width: 300%;
 }
 
 /*------------------------------------------------------------------
@@ -160,16 +169,23 @@ button {
     margin-top: 10px;
     margin-left: -15px;
   }
+
   [class*="btnMenu"]{
     margin-top: 10px;
   }
+
   [class*="table-fs"]{
     font-size: 12px;
   }
+
   [class*="two-but"]{
     margin-left: 0;
   }
 
+  [class*="parent-1"]{
+    display:block;
+    margin-top: -50px;
+  }
 
 }
 
