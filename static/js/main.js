@@ -1,8 +1,8 @@
 
 $(document).ready(function () {
   
-  var dataTable = $('#book_table').DataTable();
-  var dataTable1 = $('#member_data').DataTable();
+  var dataTable = $('#book_table').dataTable({"autoWidth":false});
+  var dataTable1 = $('#member_data').dataTable({"autoWidth":false});
 
 
 $(document).on('click', '#delete_but', function() {

@@ -34,26 +34,29 @@
             <table id="book_table" class="table table-bordered table-striped table-fs" >
                 <thead>
                     <tr>
-                        <th scope="col" class=" p-l-15 p-r-15">Trans_ID</th>
-                        <th scope="col" class=" p-l-15 p-r-15">Title</th>
-                        <th scope="col" class=" p-l-15 p-r-15">Member Name</th>
-                        <th scope="col" class=" p-l-15 p-r-15">Date</th>
-                        <th scope="col" class=" p-l-15 p-r-15">Status</th>
-                        <th scope="col" class=" p-l-15 p-r-15">Rent Fee Status</th>
-                        <th scope="col" class=" p-l-15 p-r-15"></th>
-                        <th scope="col" class=" p-l-15 p-r-15"></th>
+                        <th style="width:10%" scope="col" class=" p-l-15 p-r-15">Sr. No</th>
+                        <th style="width:10%" scope="col" class=" p-l-15 p-r-15">Trans_ID</th>
+                        <th style="width:30%" scope="col" class=" p-l-15 p-r-15">Title</th>
+                        <th style="width:25%" scope="col" class=" p-l-15 p-r-15">Member Name</th>
+                        <th style="width:20%" scope="col" class=" p-l-15 p-r-15">Date</th>
+                        <th style="width:10%" scope="col" class=" p-l-15 p-r-15">Status</th>
+                        <th  scope="col" class=" p-l-15 p-r-15">Rent Fee Status</th>
+                        <th  scope="col" class=" p-l-15 p-r-15"></th>
+                        <th  scope="col" class=" p-l-15 p-r-15"></th>
                     </tr>
                 </thead>
                 <tbody>
+                    {% set i = namespace(value=1) %}
                     {% for trans in trans_res %}
                     <tr>
-                            <td class=" col p-l-5 p-r-5">{{ trans['transID'] }}</td>
-                            <td class=" col p-l-5 p-r-5">{{ trans['title'] }}</td>
-                            <td  class=" col p-l-5 p-r-5">{{ trans['member'] }}</td>
-                            <td class=" col p-l-5 p-r-5">{{ trans['date'] }}</td>
-                            <td   class=" col p-l-5 p-r-5">{{ trans['rentstatus']}}</td>
-                            <td   class=" col p-l-5 p-r-5">{{ trans['feestatus']}}</td>
-                            <td>
+                            <td style="width:10%" class=" col p-l-5 p-r-5">{{ i.value }}</td>
+                            <td style="width:10%" class=" col p-l-5 p-r-5">{{ trans['transID'] }}</td>
+                            <td style="width:30%" class=" col p-l-5 p-r-5">{{ trans['title'] }}</td>
+                            <td style="width:25%" class=" col p-l-5 p-r-5">{{ trans['member'] }}</td>
+                            <td style="width:20%" class=" col p-l-5 p-r-5">{{ trans['date'] }}</td>
+                            <td  class=" col p-l-5 p-r-5">{{ trans['rentstatus']}}</td>
+                            <td  class=" col p-l-5 p-r-5">{{ trans['feestatus']}}</td>
+                            <td >
                                 {% if trans.rentstatus=='rent'%}
                                 <a id="edit_but" data-title='{{trans["title"]}}' 
                                     data-transid="{{ trans['transID'] }}" 
@@ -63,11 +66,12 @@
                                 </a>
                                 {% endif %}
                             </td>
-                            <td>
+                            <td style="width:10%">
                                 <a id="delete_but" data-name='{{ trans["member"] }}' data-class='transaction' data-id='{{ trans["transID"] }}' 
                                 type="submit" class="btn btn-primary">Delete</a>
                             </td>
                     </tr>
+                    {% set i.value = i.value+1 %}
                     {% endfor %}
                 </tbody>
             </table>
