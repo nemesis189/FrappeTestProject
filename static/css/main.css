@@ -82,6 +82,10 @@ a:hover {
   cursor: pointer;
 }
 
+.paginate_button a{
+  color:black;
+}
+
 button {
 	outline: none !important;
 	border: none;
