@@ -191,7 +191,7 @@ def create_trans():
 
     if trans.find_one({'transID':tr['transID']}):
         flash(f'A transaction with same Id exists. Please use a different id!','danger')
-        return redirect(url_for('mem_page'))
+        return redirect(url_for('transaction_page'))
 
     fine = int(cust.find_one( {'name': tr['member']} )['fine']) 
     new_stock = int(books.find_one( { 'title': tr['title']} )['stock'])
@@ -224,6 +224,7 @@ def create_trans():
 
 
 if __name__ == '__main__':
+    app.config['SESSION_TYPE'] = 'filesystem'
     app.secret_key = 'mysecret'
     app.run(debug=True)
 
