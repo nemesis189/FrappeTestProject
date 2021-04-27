@@ -14,25 +14,25 @@
         {% endfor %}
         {% endif %}
         {% endwith %}
-        <div class='row loader'>
+        <!-- <div class='row loader'>
             <div class="col-md-3 "></div>
             <div class="col-lg-9 p-t-25  " style="font-size: 25px;"> Please wait while data loads</div>
             
-        </div>
+        </div> -->
         <div class='row'>
-            <div class=" col but-col">
+            <div class="m-r-200 col but-col">
                 <a  href="{{url_for('index')}}">
                     <button type="button" class="m-l-10 btn btn-lg btn-outline-info">Back Home</button>
                 </a>
             </div>
-            <div   class=" container import-but col but-col">
+            <!-- <div   class=" container import-but col but-col">
                 <a id='import-frappe' href="{{url_for('import_frappe')}}">
                     <button type="button" class="btn btn-lg btn-outline-danger">Import from Frappe</button>
                 </a>
-            </div>
+            </div> -->
             <div class=" col but-col">
                 
-                <button  type="button" class="m-l-10 btn btn-lg btn-outline-dark" data-toggle="modal" data-target="#exampleModal">
+                <button  type="button" class="m-l-100 btn btn-lg btn-outline-dark" data-toggle="modal" data-target="#exampleModal">
                     Add New Book
                 </button>
             </div>
