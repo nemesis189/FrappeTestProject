@@ -16,6 +16,7 @@ cust = db.members
 trans = db.transaction
 
 app = Flask(__name__, static_url_path='/static')
+app.secret_key = 'mysecret'
 
 
 def display_books():
