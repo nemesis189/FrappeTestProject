@@ -317,6 +317,7 @@ def create_trans():
         return redirect(url_for('transaction_page'))
 
     fine = int(cust.find_one( {'name': tr['member']},{'_id':0} )['fine']) 
+    print(fine)
     new_stock = int(books.find_one( { 'title': tr['title']} ,{'_id':0})['stock'])
 
     if new_stock <= 0:
@@ -324,7 +325,9 @@ def create_trans():
         return redirect(url_for('transaction_page'))
 
     if trans_type == 'rent':
-        if fine >500:
+        print('hehehrehrherhehrehrherherh')
+        if fine >=500:
+            print('fine greaterererrerererre')
             flash(f' {tr["member"]} has reached their Rental Debt Limit!','danger')
             return redirect(url_for('transaction_page'))
         tr['feestatus'] = "Unpaid"
