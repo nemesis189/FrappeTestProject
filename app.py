@@ -285,8 +285,24 @@ def create_member():
     'name' : request.form['txtname'],
     'phone' : request.form['txtphone'],
     'email' : request.form['txtemail'],
+    'password':request.form['txtpass'],
     'fine' : 0
     }
+    mem['password'] = pbkdf2_sha256.encrypt(mem['password'])
+    axx = cust.find_one({ "email": mem['email'] },{'_id':0})
+
+    if axx:
+        ue = mem['email']
+        flash(f'Account already in use for { ue }!','danger') 
+        return redirect(url_for('mem_page'))
+
+    if cust.find_one({'memID':mem['memID']},{'_id':0}):
+        flash(f'User with same Id exists. Please use a different id!','danger')
+        return redirect(url_for('mem_page'))
+
+    if cust.insert_one(mem):  
+        #Inserting mem info into database
+        del mem['_id']
     if cust.find_one({'memID':mem['memID']},{'_id':0}):
         flash(f'User with same Id exists. Please use a different id!','danger')
         return redirect(url_for('mem_page'))
@@ -325,9 +341,7 @@ def create_trans():
         return redirect(url_for('transaction_page'))
 
     if trans_type == 'rent':
-        print('hehehrehrherhehrehrherherh')
         if fine >=500:
-            print('fine greaterererrerererre')
             flash(f' {tr["member"]} has reached their Rental Debt Limit!','danger')
             return redirect(url_for('transaction_page'))
         tr['feestatus'] = "Unpaid"
@@ -338,7 +352,6 @@ def create_trans():
     
     if trans_type == 'return':
         tid=request.form['txtid']
-        print('hHHHHHHEEEEEEEEEEEEEE')
         cust.find_one_and_update({'name': tr['member'] }, {'$set':  {'fine':fine-100} })
         print(cust.find_one({'name': tr['member'] }))
         books.find_one_and_update( { 'title': tr['title']}, {'$set': { 'stock': new_stock+1 }} )
@@ -348,11 +361,6 @@ def create_trans():
         print(trans.find_one({'transID': tid }))
 
         return redirect(url_for('transaction_page'))
-
-########## Reports ###############
-
-
-
 
 
 if __name__ == '__main__':
