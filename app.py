@@ -1,6 +1,9 @@
 from flask import Flask, render_template, url_for, request, session, redirect, jsonify,flash
 import pymongo
+from functools import wraps
 from datetime import timedelta, datetime
+from passlib.hash import pbkdf2_sha256
+import uuid
 import numpy as np
 import math
 import requests
@@ -19,16 +22,58 @@ app = Flask(__name__, static_url_path='/static')
 app.secret_key = 'mysecret'
 
 
+def start_session(user):
+    # if user['_id']:
+        # del user['_id']
+    del user['password']          
+    session['logged_in'] = True       
+    session['user'] = user        #ASSIGNING CURRENT USER AS OBJ TO SESSION USER VARIABLE 
+    return redirect(url_for('dash'))
+
+#Method for verifying and logging in 
+def login():
+    user = cust.find_one({
+        "email": request.form.get('email')
+    },{'_id':0})
+    if user and pbkdf2_sha256.verify(request.form.get('pass'), user['password']):
+        return start_session(user)
+
+    flash(f'Login Failed! Invalid credintials','danger') 
+    return redirect(url_for('index'))
+
+
+# Route for signing out, clearing session
+@app.route('/signout')
+def signout():
+    session.clear()
+    return redirect('/')
+
+def login_required(f):
+  @wraps(f)
+  def wrap(*args, **kwargs):
+    if 'logged_in' in session:
+      return f(*args, **kwargs)
+    else:
+      return redirect('/')
+  return wrap    
+
+
+@login_required
 def display_books():
     books_res =[x for x in  books.find({},{'bookID':1,'title':1, 'authors':1, 'isbn':1, 'publisher':1,'  num_pages':1,'stock':1 })]
     return render_template('books.html',books_res=books_res)
 
+@login_required
 def display_members():
     cust_res =[x for x in cust.find({})] 
     return render_template('member.html',cust_res=cust_res)
 
+@login_required
 def display_transaction():
-    trans_res =[x for x in trans.find({})]
+    if session['user']['admin']:
+        trans_res =[x for x in trans.find({})]
+    else:
+        trans_res =[x for x in trans.find({'member':session['user']['name']})]
     books_res =[x for x in books.find({},{'bookID':1,'title':1,'isbn':1,})]
     cust_res =[x for x in cust.find({},{'memID':1,'name':1})] 
     return render_template('transaction.html',trans_res=trans_res,books_res=books_res,cust_res=cust_res)
@@ -36,16 +81,67 @@ def display_transaction():
 
 
 ##### All basic routes
-@app.route('/',methods=['GET'])
+@app.route('/',methods=['GET', 'POST'])
 def index():
+    if 'user' in session:
+        return redirect('dash')
+    if request.method == 'POST':
+        return login()
     return render_template('index.html')
+
+@app.route('/dash',methods=['GET'])
+@login_required
+def dash():
+    return render_template('dash.html')
+
+
+
+#Route for registering user
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    if request.method == 'POST':
+        
+        user = {                                    #creating user object with user details
+        "memID": str(uuid.uuid4().fields[-1])[:5],
+        "name": request.form.get('reg_fname'),
+        "phone": request.form.get('reg_phone'),
+        "email": request.form.get('reg_email'),
+        "password": request.form.get('reg_pass'),
+        "admin":0,
+        'fine':0
+        }
+        user['password'] = pbkdf2_sha256.encrypt(user['password'])
+        axx = cust.find_one({ "email": user['email'] },{'_id':0})
+        print(axx)
+
+        if axx:
+            ue = user['email']
+            flash(f'Account already in use for { ue }!','danger') 
+            return redirect('register')
+
+        if cust.find_one({'memID':user['memID']},{'_id':0}):
+            flash(f'User with same Id exists. Please use a different id!','danger')
+            return redirect('register')
+
+        if cust.insert_one(user):  
+            #Inserting user info into database
+            del user['_id']
+            return start_session(user)
+
+        flash(f'Signup failed !','danger') 
+        return redirect('register')
+
+
+    return render_template('register.html')         #rendering registration page if req == GET
+
+
 
 
 @app.route('/books', methods=['GET','DELETE'])
 def books_page():
     if request.method == 'DELETE':
         getid = request.get_data('id').decode('utf-8').split('=')[1]
-        if not books.find_one({'bookID':getid}):
+        if not books.find_one({'bookID':getid},{'_id':0}):
             flash('Data not found!','danger')
             return jsonify({'redirect': url_for("books_page")})
         books.delete_one({'bookID':getid})
@@ -59,7 +155,7 @@ def books_page():
 def mem_page():
     if request.method == 'DELETE':
         getid = request.get_data('id').decode('utf-8').split('=')[1]
-        if not cust.find_one({'memID':getid}):
+        if not cust.find_one({'memID':getid},{'_id':0}):
             flash(f'Data not found!','danger')
             return jsonify({'redirect': url_for("mem_page")})
         cust.delete_one({'memID':getid})
@@ -74,7 +170,7 @@ def mem_page():
 def transaction_page():
     if request.method == 'DELETE':
         getid = request.get_data('id').decode('utf-8').split('=')[1]
-        if not trans.find_one({'transID':getid}):
+        if not trans.find_one({'transID':getid},{'_id':0}):
             flash(f'Data not found!','danger')
             return jsonify({'redirect': url_for("transaction_page")})
         trans.delete_one({'transID':getid})
@@ -82,21 +178,34 @@ def transaction_page():
         return jsonify({'redirect': url_for("transaction_page")})
 
     if request.method =='GET':
+
         return display_transaction()
         
 
 @app.route('/reports',methods=['GET'])
 def reports():
-    list_of_trans = list(trans.find({'rentstatus':'rent'}, {'_id':0,'title':1, 'member':1}))
-    titles = [ x['title'] for x in list_of_trans ]
-    members = [ x['member'] for x in list_of_trans ]
+    if session['user']['admin']:
+        list_of_trans = list(trans.find({}, {'_id':0,'title':1, 'member':1, 'date':1}))
+        list_of_trans_rent = list(trans.find({'rentstatus':'rent'}, {'_id':0,'title':1, 'member':1, 'date':1}))
+        titles = [ x['title'] for x in list_of_trans ]
+        members = [ x['member'] for x in list_of_trans ]
+        print(list_of_trans_rent)
+    else:
+        list_of_trans = list(trans.find({'member':session['user']['name']}, {'_id':0,'title':1, 'member':1, 'date':1}))
+        list_of_trans_rent = list(trans.find({'member':session['user']['name'],'rentstatus':'rent'}, {'_id':0,'title':1, 'member':1, 'date':1}))
+        titles = [ x['title'] for x in list_of_trans ]
+        members = [ x['member'] for x in list_of_trans ]
 
+
+    # print(list_of_trans, list_of_trans_rent)
+    print(titles,members)
     title_count = { title: titles.count(title) for title in titles }
     member_count = { mem: members.count(mem) for mem in members }
     final_titles = sorted(title_count.items(), key = lambda kv:(kv[1], kv[0]), reverse = True )
     final_members = sorted(member_count.items(), key = lambda kv:(kv[1], kv[0]), reverse = True)
-
-    return render_template('reports.html',final_members=final_members,final_titles=final_titles)
+    print(final_titles)
+    
+    return render_template('reports.html',list_of_trans_rent= list_of_trans_rent, final_members=final_members,final_titles=final_titles, title_count=title_count )
 
 
 ####### Routes for additional functions
@@ -111,7 +220,7 @@ def import_frappe():
         except:
             continue
     for bk in imp_books:
-        if not books.find_one({'bookID': bk['bookID']}):
+        if not books.find_one({'bookID': bk['bookID']},{'_id':0}):
             bk['stock'] = 50
             books.insert_one(bk)
     flash(f'Data from Frappe API loaded successfully','success')
@@ -135,8 +244,12 @@ def updatebook():
 
 @app.route('/addbook', methods=['POST'])
 def create_record():
+    bid = str(uuid.uuid4().fields[-1])[:5]
+    while books.find_one({'bookID':bid},{'_id':0}):
+        bid = str(uuid.uuid4().fields[-1])[:5]
+
     bk = {
-        'bookID':          request.form['txtid'],
+        'bookID':          bid,
         'title' :          request.form['txttitle'],
         'authors' :        request.form['txtauthor'],
         'isbn' :           request.form['txtisbn'],
@@ -163,14 +276,18 @@ def updatemember():
 
 @app.route('/addmember', methods=[ 'POST'])
 def create_member():
+    mid = str(uuid.uuid4().fields[-1])[:5]
+    while books.find_one({'memID':mid},{'_id':0}):
+        mid = str(uuid.uuid4().fields[-1])[:5]
+
     mem = {
-    'memID': request.form['txtmemID'],
+    'memID': mid,
     'name' : request.form['txtname'],
     'phone' : request.form['txtphone'],
     'email' : request.form['txtemail'],
     'fine' : 0
     }
-    if cust.find_one({'memID':mem['memID']}):
+    if cust.find_one({'memID':mem['memID']},{'_id':0}):
         flash(f'User with same Id exists. Please use a different id!','danger')
         return redirect(url_for('mem_page'))
     cust.insert_one(mem)
@@ -181,21 +298,26 @@ def create_member():
 
 @app.route('/addtrans', methods=[ 'POST'])
 def create_trans():
+    tid = str(uuid.uuid4().fields[-1])[:5]
+    while books.find_one({'memID':tid},{'_id':0}):
+        tid = str(uuid.uuid4().fields[-1])[:5]
     trans_type = request.form['transtype']
+    getdate = str(datetime.now().date()) if not session['user']['admin'] else request.form['txtdate']
     tr = {
-    'transID': request.form['txtid'],
+    'transID': tid,
     'title' : request.form['txttitle'],
     'rentstatus': trans_type,
     'member' : request.form['txtmember'],
-    'date' : request.form['txtdate'],
+    'date' : getdate,
+    'returndate':'Not Returned' ,
     }
 
-    if trans.find_one({'transID':tr['transID']}):
+    if trans.find_one({'transID':tr['transID']},{'_id':0}):
         flash(f'A transaction with same Id exists. Please use a different id!','danger')
         return redirect(url_for('transaction_page'))
 
-    fine = int(cust.find_one( {'name': tr['member']} )['fine']) 
-    new_stock = int(books.find_one( { 'title': tr['title']} )['stock'])
+    fine = int(cust.find_one( {'name': tr['member']},{'_id':0} )['fine']) 
+    new_stock = int(books.find_one( { 'title': tr['title']} ,{'_id':0})['stock'])
 
     if new_stock <= 0:
         flash(f'selected book is out of stock!','danger')
@@ -212,10 +334,16 @@ def create_trans():
         return redirect(url_for('transaction_page'))
     
     if trans_type == 'return':
-        tr['feestatus'] = "Paid"
+        tid=request.form['txtid']
+        print('hHHHHHHEEEEEEEEEEEEEE')
         cust.find_one_and_update({'name': tr['member'] }, {'$set':  {'fine':fine-100} })
+        print(cust.find_one({'name': tr['member'] }))
         books.find_one_and_update( { 'title': tr['title']}, {'$set': { 'stock': new_stock+1 }} )
-        trans.insert_one(tr)
+        print(books.find_one({'title': tr['title'] }))
+
+        trans.find_one_and_update({'transID': tid},{'$set':{'feestatus':"Paid",'rentstatus':'Returned','returndate':str(datetime.now().date())}})
+        print(trans.find_one({'transID': tid }))
+
         return redirect(url_for('transaction_page'))
 
 ########## Reports ###############

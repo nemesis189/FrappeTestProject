@@ -2,38 +2,63 @@
 {% extends "layout.html" %}
 
 {% block body %}
-	<div class="container parent m-t-250 m-b-50" style="min-width:100%">
-		<div id='' class="row  ">
-			<div class="col-md-4">
-				<a href="{{url_for('books_page')}}">
-					<button type="button" class="btnMenu btn-lg-res btn-lg btn-outline-success">Books</button>
-				</a>
-			</div>
-			
-			<div class="col-md-4">
-				<a href="{{url_for('mem_page')}}">
-					<button type="button" class="btnMenu btn-lg-res btn-lg btn-outline-danger">Members</button>
-				</a>
-			</div>
-			
-			<div class="col-md-4">
-				<a href="{{url_for('transaction_page')}}">
-					<button type="button" class="btnMenu btn-lg-res btn-lg btn-outline-warning">Transactions</button>
-				</a>
-			</div>					
-		</div>
-	</div>
-	<div class="container parent-1 m-b-50" style="min-width:100%">
-		<div class="row">
-			<div class="col-md-12">
-				<a href="{{url_for('reports')}}">
-					<button type="button" class="btnMenu btn-lg-res btn-lg btn-outline-secondary">Reports</button>
-				</a>
+	<div class="container row" style="min-width:100%">
+		<div class="container-login100">
+			<div  class="wrap-login100">
+				<div id='wrap-login' class="animate__animated ">
+
+					<form name='login_form'  method="POST" class="login100-form validate-form" >
+						<span class="align-items-center login100-form-title p-b-43">
+							Login to continue
+						</span>
+						
+						<div class="wrap-input100 validate-input" data-validate = "Valid email is required: ex@abc.xyz">
+							<input placeholder="Enter Email" class="input100" type="text" name="email" autocomplete="off">
+						</div>
+						
+						<div class="wrap-input100 validate-input" data-validate="Password is required">
+							<input placeholder="Enter Password" class="input100" type="password" name="pass" autocomplete="off">
+						</div>
+						 
+						{% with messages = get_flashed_messages(with_categories=true) %}
+                            {% if messages %}
+                            {% for category, message in messages %}
+                                <div class="row alert alert-{{ category }}" style="font-size: 15px;">
+                                {{ message }}
+                                </div>
+                            {% endfor %}
+                            {% endif %}
+                        {% endwith %}
+	
+						<div class="container-login100-form-btn">
+							<button type="submit" style="font-size: 18px;" class="login100-form-btn fs-25" name='register' id='register'>
+								Login
+							</button>
+						</div>
+						
+						<div class="text-center p-t-46 p-b-20">
+							<span >
+								<a id='shw' href="{{ url_for('register')}}" class="fs-18" style="color: black;">OR<br> Create a New Account</a>
+							
+							</span>
+						</div>
+	
+						
+					</form>
+				</div>
+				
+				
+
+
+				<div class="login100-more m-t-60 " style="background-image:url('static/images/dbit_front.png'); ">
+				</div>
 			</div>
 		</div>
 	</div>
 	{% endblock %}
-
+	
+	
+  
 
 
 

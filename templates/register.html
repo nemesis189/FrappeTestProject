@@ -1,0 +1,81 @@
+{% extends "layout.html" %}
+
+{% block body %}
+
+	<!-- MAIN BODY -->
+	<div class="limiter">
+		<div class="container-login100 m-l-50" style="margin-top: 10px;">
+					<form method="POST" name = 'signup_form'  class="login100-form validate-form fs-23 " autocomplete="off">
+						<span class="login100-form-title fs-25 p-b-43 m-t-0 ">
+							<a id='shw2' href="{{ url_for('index')}}"> 
+								<span style="color: black;" class='fs-25 fa fa-arrow-left' style='margin-left: -50px; '>&nbsp;&nbsp;</span>
+							</a>
+							Register with your details
+						</span>
+
+                        <div class="row fs-20">
+                            <div class="col-md-6">
+
+                                Full Name:
+                                <div class="wrap-input100 validate-input" placeholder="Enter full name" data-validate = "Valid name is required">
+                                    <input class="input100" type="text" name="reg_fname" autocomplete="off">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+
+                                Phone:
+                                <div class="wrap-input100 validate-input" placeholder="Enter phone number" data-validate = "Valid name is required">
+                                    <input class="input100" type="text" name="reg_phone" autocomplete="off">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row fs-20">
+                            <div class="col-md-6">
+                                Email:
+                                <div class="wrap-input100 validate-input" placeholder="Enter email" data-validate = "Valid email is required: ex@abc.xyz">
+                                    <input class="input100" type="text" name="reg_email" autocomplete="off">
+                                </div>
+                            </div>
+                        </div>
+                            
+                        <div class="row fs-20">
+                            <div class="col-md-6">
+                                Password:
+                                <div class="wrap-input100 validate-input" placeholder="Enter password" data-validate="Password is required">
+                                    <input class="input100" type="password" name="reg_pass">
+                                </div>	
+                            </div>
+                        </div>
+                             
+						
+						{% with messages = get_flashed_messages(with_categories=true) %}
+                            {% if messages %}
+                            {% for category, message in messages %}
+                                <div class="row alert alert-{{ category }}" style="font-size: 25px;">
+                                {{ message }}
+                                </div>
+                            {% endfor %}
+                            {% endif %}
+                        {% endwith %}
+						
+						
+	
+                        
+                        <div class="container-login100-form-btn m-t-80" style="max-width: 300px; ">
+                            <input type="submit" style="font-size: 20px;" class="btn login100-form-btn" name='register' value="Register" id='register'/> 
+                        </div>
+                    </form>
+
+
+		</div>
+	</div>
+	
+	
+	
+  
+
+
+
+{% endblock %}

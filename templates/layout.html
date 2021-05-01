@@ -30,7 +30,25 @@
 	<div class="head row-1" >
 		<nav class="navbar navbar-dark navbar-expand-sm  fixed-top" style='background-color:#4946e7;height: 5rem;'>
 			<div class="container" style="max-width:100%;">
-			<a class="navbar-brand" href="{{ url_for('index')}}"><h2>Book Store</h2></a>
+				<a class="navbar-brand" href="{{ url_for('index')}}">
+					<img src="{{ url_for('static', filename='images/dbit.png') }}"  style="max-height: 65px;" class="d-inline-block align-top" >
+					<span style="margin-bottom: -20px;" class=" m-l-5 fs-45">LMS</span>
+				</a>
+				<ul class="navbar-nav mr-left">
+					{% if session['logged_in'] == True %}
+					<li class="nav-item btn">
+						<div id='' class="row  ">
+							<span style="color: azure;" class="fs-40 m-r-40"><b> {{ session['user']['name'] }}</b></span>
+						</div>
+						{% if session['user']['admin'] %}
+						<div id='' class="row  ">
+							<span class="fs-15 m-r-40 " style="background-color:rgb(255, 255, 255);color:rgb(2, 1, 1)">Admin access enabled</b></span>
+						</div>
+						{% endif %}
+					</li>
+					<li class="nav-item btn"><a class="nav-link fs-25" href="{{ url_for('signout')}}">Logout</a></li>
+					{% endif %}
+				</ul>  
 			</div>
 		</nav>
 	</div>

@@ -28,9 +28,15 @@
                 <a class="nav-link active" id="book-tab-1" data-toggle="tab"
                 href="#book-tab" role="tab" aria-controls="book-tab" aria-selected="true">Books Report</a>
             </li>
-            <li class="nav-item" role="presentation">
-                <a  class="nav-link"  id="member-tab-2"  data-toggle="tab"  href="#member-tab"
-                    role="tab" aria-controls="member-tab" aria-selected="false" >Members Report</a>
+    		{% if session['user']['admin'] %}
+                <li class="nav-item" role="presentation">
+                    <a  class="nav-link"  id="member-tab-2"  data-toggle="tab"  href="#member-tab"
+                        role="tab" aria-controls="member-tab" aria-selected="false" >Members Report</a>
+                </li>
+            {% endif %}    
+                <li class="nav-item" role="presentation">
+                <a  class="nav-link"  id="debt-tab-3"  data-toggle="tab"  href="#debt-tab"
+                    role="tab" aria-controls="member-tab" aria-selected="false" >Pending Returns</a>
             </li>
         </ul>
 
@@ -66,6 +72,7 @@
                     </div>
                 </div>
 
+		        {% if session['user']['admin'] %}
                 <div class="tab-pane fade" id="member-tab" role="tabpanel" aria-labelledby="ex1-tab-2">
                     <div class="">
                         <h2>Frequent Renters</h2>
@@ -92,6 +99,55 @@
                                     {% endfor %}
                                 </tbody>
                             </table>
+                            <br><br>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+
+                <div class="tab-pane fade" id="debt-tab" role="tabpanel" aria-labelledby="ex1-tab-3">
+                    <div class="">
+                        <h2>Pending Books and Rent</h2>
+                        <div class="table-responsive m-t-15">
+                            <table id="member_report_table" class="table table-bordered table-striped table-fs1" >
+                                <thead>
+                                    <tr>
+                                        <th scope="col" >Sr. No.</th>
+                                        {% if session['user']['admin'] == 1 %}
+                                        <th scope="col" >Member</th>
+                                        {% endif %}
+                                        <th scope="col" >title</th>
+                                        <th scope="col" >Date</th>
+                                        
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% set rent = namespace(value=0) %}
+                                    {% set i = namespace(value=1) %}
+                                    {% for trans in list_of_trans_rent %}
+                                        <tr>
+                                            <td >{{ i.value }}</td>
+                                            {% if session['user']['admin'] == 1 %}
+                                            <td >{{ trans['member'] }}</td>
+                                            {% endif %}
+                                            <td >{{ trans['title'] }}</td>
+                                            <td >{{ trans['date'] }}</td>
+                                            
+                                        </tr>
+                                        {% set rent.value = rent.value+100 %}
+                                        {% set i.value = i.value+1 %}
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                            {% if session['user']['admin'] == 0 %}
+                            <div id='' class="row m-t-40 ">
+                                <span style="color: maroon;" class="fs-25 m-r-40">
+                                    <b> 
+                                        Total Pending Rent : <span class="fs-30 fa fa-inr"> {{ rent.value }}</span>
+                                    </b>
+                                </span>
+                            </div>
+                            {% endif %}
                             <br><br>
                         </div>
                     </div>

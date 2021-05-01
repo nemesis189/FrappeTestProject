@@ -1,0 +1,49 @@
+
+{% extends "layout.html" %}
+
+{% block body %}
+	<div class="container  m-t-200 m-b-50" style="min-width:100%">
+		<div class="container parent-1 m-t-40" style="min-width:100%">
+			<div class="row">
+				<div class="col-md-6">
+					<a href="{{url_for('books_page')}}">
+						<button type="button" class="btnMenu btn-lg-res btn-lg btn-outline-success"><span class="fa fa-book m-r-15"></span>Books</button>
+					</a>
+				</div>
+			</div>
+		</div>
+		{% if session['user']['admin'] %}
+			<div class="container parent-1 " style="min-width:100%">
+				<div class="row">
+					<div class="col-md-6">
+						<a href="{{url_for('mem_page')}}">
+							<button type="button" class="btnMenu btn-lg-res btn-lg btn-outline-danger"><span class="fa fa-user-circle-o m-r-15"></span>Members</button>
+						</a>
+					</div>
+				</div>
+			</div>
+		{% endif %}
+		<div class="container parent-1 " style="min-width:100%">
+			<div class="row">
+				<div class="col-md-6">
+					<a href="{{url_for('transaction_page')}}">
+						<button type="button" class="btnMenu btn-lg-res btn-lg btn-outline-warning"><span class="fa fa-exchange m-r-15"></span>Transactions</button>
+					</a>
+				</div>
+			</div>
+		</div>
+		<div class="container parent-1 m-b-150" style="min-width:100%">
+			<div class="row">
+				<div class="col-md-6">
+					<a href="{{url_for('reports')}}">
+						<button type="button" class="btnMenu btn-lg-res btn-lg btn-outline-secondary"><span class="fa fa-bar-chart m-r-15"></span>Reports</button>
+					</a>
+				</div>
+			</div>
+		</div>
+	</div>
+	{% endblock %}
+
+
+
+

@@ -71,16 +71,19 @@ if($(this).data('memid')){
   }
 
 if($(this).data('transid')){     
-    var id1 =$(this).data('transid') + '-ret';
+    var id1 =$(this).data('transid');
     var title =$(this).data('title');
     var member =$(this).data('member');
     var radios = $('input:radio[name=transtype]');
     var query = '.modal-body select option[value="' + member + '"]'
+    var querytitle = '.modal-body #txttitle option[value="' + title + '"]'
 
     $('.modal-body #txtid').val(id1) ;
     $('.modal-body #txttitle').val(title) ;
     $(query).attr("selected",'selected');
+    $(querytitle).attr("selected",'selected');
     $(".modal-body #txtmember").trigger("chosen:updated");
+    $(".modal-body #txttitle").trigger("chosen:updated");
     radios.filter('[value=return]').prop('checked', true);
     }
 
