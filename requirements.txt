@@ -17,4 +17,3 @@ pymongo[srv]
 dnspython
 passlib
 uuid
-functools
